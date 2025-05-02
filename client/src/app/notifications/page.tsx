@@ -7,7 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { FiCheckCircle, FiTrash2, FiMail, FiMailOpen } from 'react-icons/fi';
+import { FiCheckCircle, FiTrash2, FiMail } from 'react-icons/fi';
 
 type Notification = {
   _id: string;
@@ -151,10 +151,7 @@ export default function Notifications() {
     } mb-4 flex justify-between items-start`}>
       <div className="flex-1">
         <div className="flex items-center mb-2">
-          {notification.read ? 
-            <FiMailOpen className="text-gray-400 mr-2" /> : 
-            <FiMail className="text-blue-500 mr-2" />
-          }
+          <FiMail className={notification.read ? "text-gray-400 mr-2" : "text-blue-500 mr-2"} />
           <p className="text-gray-800 font-medium">{notification.message}</p>
         </div>
         

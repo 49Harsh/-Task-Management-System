@@ -15,6 +15,7 @@ type FormData = {
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in progress' | 'completed' | 'archived';
   assignedTo: string;
+  createdBy?: string;
 };
 
 type User = {
@@ -70,8 +71,16 @@ export default function NewTask() {
     setIsSubmitting(true);
     
     try {
-      if (!user?.id) {
+      console.log("Current user data:", user);
+      
+      if (!user) {
         throw new Error('User is not authenticated');
+      }
+      
+      // Properly check for user ID - dealing with potential mismatch between type definition and actual object
+      // The user object from the API has _id but our type definition uses id
+      if (!(user as any)._id && !user.id) {
+        throw new Error('User ID not found');
       }
 
       // Format date properly for MongoDB/ISO standard
@@ -82,6 +91,10 @@ export default function NewTask() {
         formattedData.dueDate = dateObj.toISOString();
       }
       
+      // Add the user ID to the task data - using the actual field from the user object
+      const userId = (user as any)._id || user.id;
+      formattedData = { ...formattedData, createdBy: userId };
+      
       const config = {
         headers: {
           'Content-Type': 'application/json',
@@ -90,6 +103,7 @@ export default function NewTask() {
       };
 
       console.log("Submitting task:", formattedData);
+      console.log("Using auth token:", token);
       
       const res = await axios.post('http://localhost:5000/api/tasks', formattedData, config);
       toast.success('Task created successfully!');
