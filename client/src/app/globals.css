@@ -1,0 +1,43 @@
+@import "tailwindcss/preflight";
+@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 246, 248, 250;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 18, 18, 18;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-color: rgb(var(--background-rgb));
+}
+
+/* Form control styles */
+input, textarea, select {
+  border: 1px solid #d1d5db !important;
+  background-color: white !important;
+  color: #374151 !important;
+}
+
+/* Additional custom styles */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Links inside task cards should span the whole card */
+a div {
+  height: 100%;
+  width: 100%;
+}
+
+/* Add any additional custom styles you need here */
