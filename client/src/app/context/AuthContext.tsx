@@ -43,6 +43,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Initialize auth state from localStorage
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+    
     const storedToken = localStorage.getItem('token');
     
     if (storedToken) {
@@ -117,7 +123,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Logout
   const logout = () => {
-    localStorage.removeItem('token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+    }
     setToken(null);
     setUser(null);
     setIsAuthenticated(false);

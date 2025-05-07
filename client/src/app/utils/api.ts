@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// Base URL for the API
-// const API_BASE_URL = 'http://localhost:5000/api';
-const API_BASE_URL = 'https://task-management-system-hsgu.onrender.com/api';
+// Base URL for the API - use environment variable with fallback
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://task-management-system-hsgu.onrender.com/api';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -15,9 +14,12 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['x-auth-token'] = token;
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers['x-auth-token'] = token;
+      }
     }
     return config;
   },
@@ -30,7 +32,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined' && error.response?.status === 401) {
       // Unauthorized - clear auth state
       localStorage.removeItem('token');
     }
