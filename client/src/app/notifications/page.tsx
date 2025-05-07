@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -42,13 +43,7 @@ export default function Notifications() {
       if (!token) return;
       
       try {
-        const config = {
-          headers: {
-            'x-auth-token': token
-          }
-        };
-        
-        const res = await axios.get('http://localhost:5000/api/notifications', config);
+        const res = await api.get('/notifications');
         setNotifications(res.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -65,13 +60,7 @@ export default function Notifications() {
 
   const markAsRead = async (id: string) => {
     try {
-      const config = {
-        headers: {
-          'x-auth-token': token
-        }
-      };
-      
-      await axios.put(`http://localhost:5000/api/notifications/${id}`, {}, config);
+      await api.put(`/notifications/${id}`, {});
       
       // Update local state
       setNotifications(notifications.map(notification => 
@@ -87,13 +76,7 @@ export default function Notifications() {
 
   const markAllAsRead = async () => {
     try {
-      const config = {
-        headers: {
-          'x-auth-token': token
-        }
-      };
-      
-      await axios.put('http://localhost:5000/api/notifications/read/all', {}, config);
+      await api.put('/notifications/read/all', {});
       
       // Update local state
       setNotifications(notifications.map(notification => ({ ...notification, read: true })));
@@ -107,13 +90,7 @@ export default function Notifications() {
 
   const deleteNotification = async (id: string) => {
     try {
-      const config = {
-        headers: {
-          'x-auth-token': token
-        }
-      };
-      
-      await axios.delete(`http://localhost:5000/api/notifications/${id}`, config);
+      await api.delete(`/notifications/${id}`);
       
       // Update local state
       setNotifications(notifications.filter(notification => notification._id !== id));
@@ -127,13 +104,7 @@ export default function Notifications() {
 
   const clearAllRead = async () => {
     try {
-      const config = {
-        headers: {
-          'x-auth-token': token
-        }
-      };
-      
-      await axios.delete('http://localhost:5000/api/notifications', config);
+      await api.delete('/notifications');
       
       // Update local state
       setNotifications(notifications.filter(notification => !notification.read));

@@ -34,3 +34,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## API Configuration
+
+This application uses a centralized API configuration that allows for easy switching between development and production backends.
+
+### Local Development
+By default, the application points to `http://localhost:5000/api`. No configuration is needed for local development.
+
+### Deployment
+When deploying to production, you need to set the `NEXT_PUBLIC_API_URL` environment variable to your backend URL:
+
+```bash
+# Create a .env.local file at the root of the client folder with:
+NEXT_PUBLIC_API_URL=https://your-deployed-backend.com/api
+```
+
+The API client is configured in `src/app/utils/api.ts` and handles all authentication and request headers automatically.

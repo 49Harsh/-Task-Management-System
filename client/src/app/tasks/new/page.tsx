@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
@@ -47,13 +48,7 @@ export default function NewTask() {
       if (!token) return;
       
       try {
-        const config = {
-          headers: {
-            'x-auth-token': token
-          }
-        };
-        
-        const res = await axios.get('http://localhost:5000/api/users', config);
+        const res = await api.get('/users');
         console.log("Available users:", res.data);
         setUsers(res.data);
       } catch (error) {
@@ -95,17 +90,9 @@ export default function NewTask() {
       const userId = (user as any)._id || user.id;
       formattedData = { ...formattedData, createdBy: userId };
       
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token
-        }
-      };
-
       console.log("Submitting task:", formattedData);
-      console.log("Using auth token:", token);
       
-      const res = await axios.post('http://localhost:5000/api/tasks', formattedData, config);
+      const res = await api.post('/tasks', formattedData);
       toast.success('Task created successfully!');
       router.push('/dashboard');
     } catch (error: any) {

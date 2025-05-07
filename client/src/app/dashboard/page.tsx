@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../hooks/useAuth';
 import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -46,14 +47,8 @@ export default function Dashboard() {
       if (!token || !user?.id) return;
 
       try {
-        const config = {
-          headers: {
-            'x-auth-token': token
-          }
-        };
-
         console.log("Current user ID:", user.id);
-        const res = await axios.get('http://localhost:5000/api/tasks', config);
+        const res = await api.get('/tasks');
         const tasks = res.data;
         setAllTasks(tasks);
 

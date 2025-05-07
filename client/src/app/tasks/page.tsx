@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../hooks/useAuth';
 import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -46,13 +47,7 @@ export default function Tasks() {
       if (!token) return;
 
       try {
-        const config = {
-          headers: {
-            'x-auth-token': token
-          }
-        };
-
-        const res = await axios.get('http://localhost:5000/api/tasks', config);
+        const res = await api.get('/tasks');
         setTasks(res.data);
       } catch (error) {
         console.error('Error fetching tasks:', error);

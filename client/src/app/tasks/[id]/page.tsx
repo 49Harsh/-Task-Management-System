@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -66,13 +67,7 @@ export default function TaskDetail({ params }: { params: { id: string } }) {
       if (!token) return;
       
       try {
-        const config = {
-          headers: {
-            'x-auth-token': token
-          }
-        };
-        
-        const res = await axios.get(`http://localhost:5000/api/tasks/${params.id}`, config);
+        const res = await api.get(`/tasks/${params.id}`);
         setTask(res.data);
         
         // Set form default values
@@ -97,13 +92,7 @@ export default function TaskDetail({ params }: { params: { id: string } }) {
       if (!token) return;
       
       try {
-        const config = {
-          headers: {
-            'x-auth-token': token
-          }
-        };
-        
-        const res = await axios.get('http://localhost:5000/api/users', config);
+        const res = await api.get('/users');
         setUsers(res.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -121,14 +110,7 @@ export default function TaskDetail({ params }: { params: { id: string } }) {
     setIsSubmitting(true);
     
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token
-        }
-      };
-      
-      const res = await axios.put(`http://localhost:5000/api/tasks/${params.id}`, data, config);
+      const res = await api.put(`/tasks/${params.id}`, data);
       setTask(res.data);
       setIsEditing(false);
       toast.success('Task updated successfully!');
@@ -148,13 +130,7 @@ export default function TaskDetail({ params }: { params: { id: string } }) {
     setIsDeleting(true);
     
     try {
-      const config = {
-        headers: {
-          'x-auth-token': token
-        }
-      };
-      
-      await axios.delete(`http://localhost:5000/api/tasks/${params.id}`, config);
+      await api.delete(`/tasks/${params.id}`);
       toast.success('Task deleted successfully!');
       router.push('/dashboard');
     } catch (error: any) {

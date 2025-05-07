@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-toastify';
 
 type FormData = {
@@ -38,14 +38,7 @@ export default function Profile() {
     setIsSubmitting(true);
     
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token
-        }
-      };
-      
-      await axios.put(`http://localhost:5000/api/users/${user.id}`, data, config);
+      await api.put(`/users/${user.id}`, data);
       toast.success('Profile updated successfully');
     } catch (error: any) {
       console.error('Error updating profile:', error);

@@ -1,9 +1,9 @@
 'use client';
 
 import { createContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
+import api from '../utils/api';
 
 // Define types
 type User = {
@@ -62,10 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Load user data using the token
   const loadUser = async (authToken: string) => {
     try {
-      // Set token in axios defaults
-      axios.defaults.headers.common['x-auth-token'] = authToken;
-
-      const res = await axios.get('http://localhost:5000/api/auth/user');
+      const res = await api.get('/auth/user');
       
       setUser(res.data);
       setIsAuthenticated(true);
@@ -82,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Register user
   const register = async (name: string, email: string, password: string) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
+      const res = await api.post('/auth/register', {
         name,
         email,
         password
@@ -102,7 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Login user
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await api.post('/auth/login', {
         email,
         password
       });
@@ -124,7 +121,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
     setUser(null);
     setIsAuthenticated(false);
-    delete axios.defaults.headers.common['x-auth-token'];
     router.push('/');
   };
 
