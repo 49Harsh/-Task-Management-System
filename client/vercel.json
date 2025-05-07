@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" },
+    { "source": "/tasks/:id", "destination": "/tasks/[id]" }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://task-management-system-hsgu.onrender.com/api"
+  }
+} 
